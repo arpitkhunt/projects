@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>AI Resume Matcher</title>
+  <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+
+    const ResumeMatcher = () => {
+      const [resume, setResume] = useState('');
+      const [jobDesc, setJobDesc] = useState('');
+      const [matchScore, setMatchScore] = useState(null);
+
+      const calculateMatch = () => {
+        const resumeWords = resume.toLowerCase().split(' ');
+        const jobWords = jobDesc.toLowerCase().split(' ');
+        const intersection = resumeWords.filter(word => jobWords.includes(word));
+        const score = intersection.length / Math.max(resumeWords.length, jobWords.length) * 100;
+        setMatchScore(score.toFixed(2));
+      };
+
+      return (
+        <div className="container mx-auto p-4">
+          <h1 className="text-2xl font-bold mb-4">AI Resume Matcher</h1>
+          <textarea
+            className="w-full p-2 mb-2 border rounded"
+            placeholder="Paste your resume text..."
+            value={resume}
+            onChange={(e) => setResume(e.target.value)}
+          />
+          <textarea
+            className="w-full p-2 mb-2 border rounded"
+            placeholder="Paste job description..."
+            value={jobDesc}
+            onChange={(e) => setJobDesc(e.target.value)}
+          />
+          <button
+            className="bg-blue-500 text-white p-2 rounded"
+            onClick={calculateMatch}
+          >
+            Calculate Match
+          </button>
+          {matchScore && (
+            <p className="mt-2">Match Score: {matchScore}%</p>
+          )}
+        </div>
+      );
+    };
+
+    ReactDOM.render(<ResumeMatcher />, document.getElementById('root'));
+  </script>
+</body>
+</html>
